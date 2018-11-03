@@ -60,6 +60,26 @@ describe('Users Controller', () => {
 
     });
 
+    describe('getAllUsers', () => {
+
+        const user1 = mockUser('admin', 'secretPassword');
+        const user2 = mockUser('user', '12345');
+
+        it('should call service and return list of all users', async () => {
+            jest.spyOn(usersService, 'getAllUsers').mockImplementation(() => [user1, user2]);
+
+            const result = await controller.getAllUsers();
+
+            expect(usersService.getAllUsers).toHaveBeenCalled();
+            expect(result.length).toEqual(2);
+            expect(result[0].login).toEqual('admin');
+            expect(result[0].password).toBeUndefined();
+            expect(result[1].login).toEqual('user');
+            expect(result[1].password).toBeUndefined();
+        });
+
+    });
+
     describe('deleteUser', () => {
 
         const userId = 13;
@@ -74,5 +94,14 @@ describe('Users Controller', () => {
         });
 
     });
+
+    function mockUser(login: string, password: string): User {
+        return {
+            id: Math.floor(Math.random() * 100 + 1),
+            login,
+            password,
+            creationDate: LocalDateTime.now().toString(),
+        } as User;
+    }
 
 });

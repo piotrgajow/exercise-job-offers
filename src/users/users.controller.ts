@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 import { CreateUserCommand } from './dto/create-user-command.dto';
 import { UsersService } from './users.service';
@@ -15,8 +15,15 @@ export class UsersController {
     @Post('/')
     async createUser(@Body() body: CreateUserCommand): Promise<User> {
         const user = await this.usersService.createUser(body);
-        delete user.password;
+        removePassword(user);
         return user;
+    }
+
+    @Get('/')
+    async getAllUsers(): Promise<Array<User>> {
+        const users = await this.usersService.getAllUsers();
+        users.forEach(removePassword);
+        return users;
     }
 
     @Delete('/:userId')
@@ -25,4 +32,8 @@ export class UsersController {
         return 'Deleted';
     }
 
+}
+
+function removePassword(user: User): void {
+    delete user.password;
 }
