@@ -63,6 +63,16 @@ describe('UsersController (e2e)', () => {
             .expect((res) => {
                 expect(res.text).toEqual('Deleted');
                 userId = undefined;
+            })
+            .then(() => {
+                return request(app.getHttpServer())
+                    .get('/users')
+                    .expect(200)
+                    .expect((resInner) => {
+                        const result = resInner.body;
+                        expect(result).toBeInstanceOf(Array);
+                        expect(result.length).toEqual(0);
+                    });
             });
     });
 

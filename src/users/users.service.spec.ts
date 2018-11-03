@@ -14,6 +14,7 @@ const mockRepository = <T>(domain: T) => {
         find: jest.fn().mockImplementation(() => {
             return [{} as T, {} as T];
         }),
+        delete: jest.fn(),
     };
 };
 
@@ -59,13 +60,27 @@ describe('UsersService', () => {
 
     describe('getAllUsers', () => {
 
-        it('should remove list of existing users', async () => {
+        it('should return list of existing users', async () => {
             jest.spyOn(userRepository, 'find');
 
             const result = await service.getAllUsers();
 
             expect(userRepository.find).toHaveBeenCalled();
             expect(result.length).toEqual(2);
+        });
+
+    });
+
+    describe('deleteUser', () => {
+
+        const userId = 143;
+
+        it('should remove given user', async () => {
+            jest.spyOn(userRepository, 'delete');
+
+            await service.deleteUser(userId);
+
+            expect(userRepository.delete).toHaveBeenCalledWith(userId);
         });
 
     });
