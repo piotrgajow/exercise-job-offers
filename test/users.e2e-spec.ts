@@ -13,6 +13,10 @@ describe('UsersController (e2e)', () => {
         login: 'test',
         password: '12345',
     };
+    const newUserData = {
+        login: 'john',
+        password: '1037sdh2Adhf',
+    };
 
     beforeAll(async () => {
         const moduleFixture = await Test.createTestingModule({
@@ -52,6 +56,22 @@ describe('UsersController (e2e)', () => {
                 expect(result[0].login).toEqual(testUser.login);
                 expect(result[0].password).toBeUndefined();
                 expect(result[0].creationDate).toBeDefined();
+            });
+    });
+
+    it('/user/:userId (PUT)', async () => {
+        expect(userId).toBeDefined();
+        return request(app.getHttpServer())
+            .put(`/users/${userId}`)
+            .send(newUserData)
+            .expect(200)
+            .expect((res) => {
+                const result = res.body;
+                expect(result.id).toEqual(userId);
+                expect(result.login).toEqual(newUserData.login);
+                expect(result.password).toBeUndefined();
+                expect(result.creationDate).toBeDefined();
+                testUser.login = newUserData.login;
             });
     });
 

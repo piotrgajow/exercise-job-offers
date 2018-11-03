@@ -4,37 +4,28 @@ import { UsersService } from './users.service';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserCommand } from './dto/create-user-command.dto';
-
-const mockRepository = <T extends {id: number}>(domain: any) => {
-    return {
-        save: jest.fn().mockImplementation((input) => {
-            input.id = Math.floor(Math.random() * 100 + 1);
-            return input;
-        }),
-        find: jest.fn().mockImplementation(() => {
-            return [{} as T, {} as T];
-        }),
-        findOne: jest.fn().mockImplementation((id) => {
-            return { id } as T;
-        }),
-        delete: jest.fn(),
-    };
-};
+import { UpdateUserCommand } from './dto/update-user-command.dto';
+import { mockRepository } from '../shared/test-utils';
 
 describe('UsersService', () => {
 
     let service: UsersService;
     let userRepository: Repository<User>;
+    const mockedUserRepository = mockRepository(User);
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 UsersService,
-                { provide: 'UserRepository', useValue: mockRepository(User) },
+                { provide: 'UserRepository', useValue: mockedUserRepository },
             ],
         }).compile();
         service = module.get<UsersService>(UsersService);
         userRepository = module.get('UserRepository');
+    });
+
+    beforeEach(() => {
+        mockedUserRepository.reset();
     });
 
     it('should be defined', () => {
@@ -43,11 +34,12 @@ describe('UsersService', () => {
 
     describe('createUser', () => {
 
+        const command = {
+            login: 'user1',
+            password: 'secret',
+        } as CreateUserCommand;
+
         it('should persist user in database', async () => {
-            const command = {
-                login: 'user1',
-                password: 'secret',
-            } as CreateUserCommand;
             jest.spyOn(userRepository, 'save');
 
             const result = await service.createUser(command);
@@ -64,6 +56,7 @@ describe('UsersService', () => {
     describe('getAllUsers', () => {
 
         it('should return list of existing users', async () => {
+            mockedUserRepository.initialize(2);
             jest.spyOn(userRepository, 'find');
 
             const result = await service.getAllUsers();
@@ -77,7 +70,8 @@ describe('UsersService', () => {
     describe('getUserById', () => {
 
         it('should return user found by id', async () => {
-            const userId = 19;
+            mockedUserRepository.initialize(16);
+            const userId = 15;
             jest.spyOn(userRepository, 'findOne');
 
             const result = await service.getUserById(userId);
@@ -98,6 +92,28 @@ describe('UsersService', () => {
             await service.deleteUser(userId);
 
             expect(userRepository.delete).toHaveBeenCalledWith(userId);
+        });
+
+    });
+
+    describe('updateUser', () => {
+
+        const userId = 11;
+        const command = {
+            login: 'xyz',
+            password: 'pass',
+        } as UpdateUserCommand;
+
+        it('should update given user data', async () => {
+            mockedUserRepository.initialize(15);
+            jest.spyOn(userRepository, 'update');
+
+            const result = await service.updateUser(userId, command);
+
+            expect(userRepository.update).toHaveBeenCalledWith(userId, command);
+            expect(result.id).toEqual(userId);
+            expect(result.login).toEqual(command.login);
+            expect(result.password).toEqual(command.password);
         });
 
     });
