@@ -4,5 +4,5 @@ export enum JobCategory {
     FOOD_DRINKS,
     OFFICE,
     COURIER,
-    SHOP_ASSISTANT
+    SHOP_ASSISTANT,
 }
