@@ -4,7 +4,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { UsersService } from './users/users.service';
+import { JobOffersModule } from './job-offers/job-offers.module';
 
 const dataSourceConfiguration = {
     type: 'mysql',
@@ -19,15 +19,15 @@ const dataSourceConfiguration = {
 
 @Module({
     imports: [
-        UsersModule,
         TypeOrmModule.forRoot(dataSourceConfiguration),
+        UsersModule,
+        JobOffersModule,
     ],
     controllers: [
         AppController,
     ],
     providers: [
         AppService,
-        UsersService,
     ],
 })
 export class AppModule {
