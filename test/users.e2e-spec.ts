@@ -40,4 +40,8 @@ describe('UsersController (e2e)', () => {
             });
     });
 
+    afterAll(() => {
+        app.close();
+    });
+
 });
