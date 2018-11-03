@@ -8,6 +8,12 @@ import { AppModule } from '../src/app.module';
 describe('UsersController (e2e)', () => {
     let app: INestApplication;
 
+    let userId: number;
+    const testUser = {
+        login: 'test',
+        password: '12345',
+    };
+
     beforeAll(async () => {
         const moduleFixture = await Test.createTestingModule({
             imports: [
@@ -20,22 +26,22 @@ describe('UsersController (e2e)', () => {
     });
 
     it('/users (POST)', () => {
-        const user = {
-            login: 'test',
-            password: '12345',
-        };
-
         return request(app.getHttpServer())
             .post('/users')
-            .send(user)
+            .send(testUser)
             .expect(201)
             .expect((res) => {
                 const result = res.body;
                 expect(result.id).toBeDefined();
-                expect(result.login).toEqual(user.login);
+                expect(result.login).toEqual(testUser.login);
                 expect(result.password).toBeUndefined();
                 expect(result.creationDate).toBeDefined();
+                userId = result.id;
             });
+    });
+
+    afterAll(() => {
+        app.close();
     });
 
 });

@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LocalDateTime } from 'js-joda';
+import { Repository } from 'typeorm';
 
 import { UsersController } from './users.controller';
 import { CreateUserCommand } from './dto/create-user-command.dto';
 import { UsersService } from './users.service';
-import { User } from './domain/user.domain';
+import { User } from './entities/user.entity';
 
 describe('Users Controller', () => {
 
@@ -20,7 +21,8 @@ describe('Users Controller', () => {
             ],
             providers: [
                 UsersService,
-            ]
+                { provide: 'UserRepository', useValue: Repository },
+            ],
         }).compile();
         controller = module.get<UsersController>(UsersController);
         usersService = module.get<UsersService>(UsersService);
@@ -39,18 +41,21 @@ describe('Users Controller', () => {
 
         const createdUser = {
             id: 13,
-            login: 'test',
-            password: '123456',
-            creationDate: LocalDateTime.now(),
+            login: createUserCommand.login,
+            password: createUserCommand.password,
+            creationDate: LocalDateTime.now().toString(),
         } as User;
 
-        it('should call service and return created user', () => {
+        it('should call service and return created user', async () => {
             jest.spyOn(usersService, 'createUser').mockImplementation(() => createdUser);
 
-            const result = controller.createUser(createUserCommand);
+            const result = await controller.createUser(createUserCommand);
 
             expect(usersService.createUser).toHaveBeenCalledWith(createUserCommand);
-            expect(result).toEqual(createdUser);
+            expect(result.id).toEqual(createdUser.id);
+            expect(result.login).toEqual(createdUser.login);
+            expect(result.password).toBeUndefined();
+            expect(result.creationDate).toEqual(createdUser.creationDate);
         });
 
     });

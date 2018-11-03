@@ -6,6 +6,9 @@ Exercise - Backend for job offer posting service
 
 ###### Installation
 
+Application requires MySQL database server.
+By default it connects to local MySQL instance using user `root`, no password and existing database `job_offers`. Different connection parameters require proper changes in `app.module.ts` file (`dataSourceConfiguration` constant).
+
 ```bash
 $ npm install
 ```
@@ -32,6 +35,10 @@ $ npm run test:cov
 ```
 
 ## Tech stack
+
+### MySQL database
+
+<a href="https://dev.mysql.com/downloads/mysql/5.7.html#downloads">MySQL 5.7 Server</a>
 
 ### Nest.js
 
