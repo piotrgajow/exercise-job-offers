@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserCommand } from './dto/create-user-command.dto';
 
-const mockRepository = <T>(domain: T) => {
+const mockRepository = <T extends {id: number}>(domain: any) => {
     return {
         save: jest.fn().mockImplementation((input) => {
             input.id = Math.floor(Math.random() * 100 + 1);
@@ -13,6 +13,9 @@ const mockRepository = <T>(domain: T) => {
         }),
         find: jest.fn().mockImplementation(() => {
             return [{} as T, {} as T];
+        }),
+        findOne: jest.fn().mockImplementation((id) => {
+            return { id } as T;
         }),
         delete: jest.fn(),
     };
@@ -67,6 +70,20 @@ describe('UsersService', () => {
 
             expect(userRepository.find).toHaveBeenCalled();
             expect(result.length).toEqual(2);
+        });
+
+    });
+
+    describe('getUserById', () => {
+
+        it('should return user found by id', async () => {
+            const userId = 19;
+            jest.spyOn(userRepository, 'findOne');
+
+            const result = await service.getUserById(userId);
+
+            expect(userRepository.findOne).toHaveBeenCalled();
+            expect(result.id).toEqual(userId);
         });
 
     });

@@ -55,6 +55,20 @@ describe('UsersController (e2e)', () => {
             });
     });
 
+    it('/user/:userId (GET)', () => {
+        expect(userId).toBeDefined();
+        return request(app.getHttpServer())
+            .get(`/users/${userId}`)
+            .expect(200)
+            .expect((res) => {
+                const result = res.body;
+                expect(result.id).toEqual(userId);
+                expect(result.login).toEqual(testUser.login);
+                expect(result.password).toBeUndefined();
+                expect(result.creationDate).toBeDefined();
+            });
+    });
+
     it('/users (DELETE)', () => {
         expect(userId).toBeDefined();
         return request(app.getHttpServer())

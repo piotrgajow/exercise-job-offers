@@ -80,6 +80,25 @@ describe('Users Controller', () => {
 
     });
 
+    describe('getUserById', () => {
+
+        const user = mockUser('user', 'pass');
+
+        it('should call service and return found user', async () => {
+            const userId = user.id;
+            jest.spyOn(usersService, 'getUserById').mockImplementation(() => user);
+
+            const result = await controller.getUserById(userId);
+
+            expect(usersService.getUserById).toHaveBeenCalledWith(userId);
+            expect(result.id).toEqual(userId);
+            expect(result.password).toBeUndefined();
+            expect(result.login).toEqual(user.login);
+            expect(result.password).toBeUndefined();
+        });
+
+    });
+
     describe('deleteUser', () => {
 
         const userId = 13;

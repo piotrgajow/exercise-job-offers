@@ -26,6 +26,13 @@ export class UsersController {
         return users;
     }
 
+    @Get('/:userId')
+    async getUserById(@Param('userId') userId: number): Promise<User> {
+        const user = await this.usersService.getUserById(userId);
+        removePassword(user);
+        return user;
+    }
+
     @Delete('/:userId')
     async deleteUser(@Param('userId') userId: number): Promise<string> {
         await this.usersService.deleteUser(userId);

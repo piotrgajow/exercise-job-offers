@@ -31,6 +31,10 @@ export class UsersService {
         return await this.userRepository.find();
     }
 
+    async getUserById(userId: number): Promise<User> {
+        return await this.userRepository.findOne(userId);
+    }
+
     async deleteUser(userId: number): Promise<void> {
         await this.userRepository.delete(userId);
     }
