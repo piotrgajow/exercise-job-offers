@@ -35,7 +35,7 @@
         ],
         "no-empty-interface": false,
         "no-empty": false,
-        "arrow-parens": false,
+        "arrow-parens": true,
         "object-literal-sort-keys": false,
         "no-unused-expression": false,
         "max-classes-per-file": [
