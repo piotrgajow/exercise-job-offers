@@ -40,4 +40,15 @@ describe('UsersController (e2e)', () => {
             });
     });
 
+    it('/users (DELETE)', () => {
+        expect(userId).toBeDefined();
+        return request(app.getHttpServer())
+            .delete(`/users/${userId}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.text).toEqual('Deleted');
+                userId = undefined;
+            });
+    });
+    
 });

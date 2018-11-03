@@ -27,4 +27,8 @@ export class UsersService {
         return user;
     }
 
+    async deleteUser(userId: number): Promise<void> {
+
+    }
+
 }
