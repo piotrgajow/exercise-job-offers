@@ -40,6 +40,21 @@ describe('UsersController (e2e)', () => {
             });
     });
 
+    it('/users (GET)', () => {
+        return request(app.getHttpServer())
+            .get('/users')
+            .expect(200)
+            .expect((res) => {
+                const result = res.body;
+                expect(result).toBeInstanceOf(Array);
+                expect(result.length).toEqual(1);
+                expect(result[0].id).toBeDefined();
+                expect(result[0].login).toEqual(testUser.login);
+                expect(result[0].password).toBeUndefined();
+                expect(result[0].creationDate).toBeDefined();
+            });
+    });
+
     afterAll(() => {
         app.close();
     });

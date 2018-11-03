@@ -5,11 +5,16 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserCommand } from './dto/create-user-command.dto';
 
-const repositoryMock = {
-    save: jest.fn().mockImplementation((input) => {
-        input.id = Math.floor(Math.random() * 100 + 1);
-        return input;
-    }),
+const mockRepository = <T>(domain: T) => {
+    return {
+        save: jest.fn().mockImplementation((input) => {
+            input.id = Math.floor(Math.random() * 100 + 1);
+            return input;
+        }),
+        find: jest.fn().mockImplementation(() => {
+            return [{} as T, {} as T];
+        }),
+    };
 };
 
 describe('UsersService', () => {
@@ -21,7 +26,7 @@ describe('UsersService', () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 UsersService,
-                { provide: 'UserRepository', useValue: repositoryMock },
+                { provide: 'UserRepository', useValue: mockRepository(User) },
             ],
         }).compile();
         service = module.get<UsersService>(UsersService);
@@ -48,6 +53,19 @@ describe('UsersService', () => {
             expect(result.login).toEqual(command.login);
             expect(result.password).toEqual(command.password);
             expect(result.creationDate).toBeDefined();
+        });
+
+    });
+
+    describe('getAllUsers', () => {
+
+        it('should remove list of existing users', async () => {
+            jest.spyOn(userRepository, 'find');
+
+            const result = await service.getAllUsers();
+
+            expect(userRepository.find).toHaveBeenCalled();
+            expect(result.length).toEqual(2);
         });
 
     });
