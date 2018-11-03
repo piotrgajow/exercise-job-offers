@@ -50,5 +50,9 @@ describe('UsersController (e2e)', () => {
                 userId = undefined;
             });
     });
-    
+
+    afterAll(() => {
+        app.close();
+    });
+
 });
