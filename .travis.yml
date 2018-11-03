@@ -8,11 +8,8 @@ cache: npm
 jobs:
     include:
         - stage: Installation
-          before_script: cd backend-job-offers
           script: npm install
         - stage: Unit tests
-          before_script: cd backend-job-offers
           script: npm run test
         - stage: End to end tests
-          before_script: cd backend-job-offers
           script: npm run test:e2e
