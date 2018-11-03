@@ -10,7 +10,7 @@ jobs:
         - stage: Installation
           script: npm install
         - stage: Lint
-          script: npm lint
+          script: npm run lint
         - stage: Unit tests
           script: npm run test
         - stage: End to end tests
