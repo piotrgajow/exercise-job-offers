@@ -1,4 +1,3 @@
-import { LocalDateTime } from 'js-joda';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
