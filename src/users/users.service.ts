@@ -1,19 +1,30 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { LocalDateTime } from 'js-joda';
+import { Repository } from 'typeorm';
 
 import { CreateUserCommand } from './dto/create-user-command.dto';
-import { User } from './domain/user.domain';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
 
-    createUser(command: CreateUserCommand): User {
-        return {
-            id: 1,
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) {
+    }
+
+    async createUser(command: CreateUserCommand): Promise<User> {
+        const user = {
             login: command.login,
-            creationDate: LocalDateTime.now(),
+            password: command.password,
+            creationDate: LocalDateTime.now().toString(),
         } as User;
+
+        await this.userRepository.save(user);
+        return user;
     }
 
 }
