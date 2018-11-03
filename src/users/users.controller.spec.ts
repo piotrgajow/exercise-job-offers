@@ -7,6 +7,7 @@ import { UsersController } from './users.controller';
 import { CreateUserCommand } from './dto/create-user-command.dto';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
+import { UpdateUserCommand } from './dto/update-user-command.dto';
 
 describe('Users Controller', () => {
 
@@ -110,6 +111,30 @@ describe('Users Controller', () => {
 
             expect(usersService.deleteUser).toHaveBeenCalledWith(userId);
             expect(result).toEqual('Deleted');
+        });
+
+    });
+
+    describe('updateUser', () => {
+
+        const userId = 135;
+        const updateUserCommand = {
+            login: 'user',
+            password: '12345',
+        } as UpdateUserCommand;
+        const updatedUser = {
+            id: userId,
+            login: updateUserCommand.login,
+            creationDate: LocalDateTime.now().toString(),
+        } as User;
+
+        it('should call service and return updated user', async () => {
+            jest.spyOn(usersService, 'updateUser').mockImplementation(() => updatedUser);
+
+            const result = await controller.updateUser(userId, updateUserCommand);
+
+            expect(usersService.updateUser).toHaveBeenCalledWith(userId, updateUserCommand);
+            expect(result).toEqual(updatedUser);
         });
 
     });

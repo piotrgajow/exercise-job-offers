@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 
 import { CreateUserCommand } from './dto/create-user-command.dto';
 import { User } from './entities/user.entity';
+import { UpdateUserCommand } from './dto/update-user-command.dto';
 
 @Injectable()
 export class UsersService {
@@ -37,6 +38,11 @@ export class UsersService {
 
     async deleteUser(userId: number): Promise<void> {
         await this.userRepository.delete(userId);
+    }
+
+    async updateUser(userId: number, command: UpdateUserCommand): Promise<User> {
+        await this.userRepository.update(userId, command);
+        return await this.userRepository.findOne(userId);
     }
 
 }
