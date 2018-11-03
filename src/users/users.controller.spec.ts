@@ -99,6 +99,21 @@ describe('Users Controller', () => {
 
     });
 
+    describe('deleteUser', () => {
+
+        const userId = 13;
+
+        it('should call service and return deleted message', async () => {
+            jest.spyOn(usersService, 'deleteUser').mockImplementation(() => undefined);
+
+            const result = await controller.deleteUser(userId);
+
+            expect(usersService.deleteUser).toHaveBeenCalledWith(userId);
+            expect(result).toEqual('Deleted');
+        });
+
+    });
+
     function mockUser(login: string, password: string): User {
         return {
             id: Math.floor(Math.random() * 100 + 1),

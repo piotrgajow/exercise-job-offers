@@ -17,6 +17,7 @@ const mockRepository = <T extends {id: number}>(domain: any) => {
         findOne: jest.fn().mockImplementation((id) => {
             return { id } as T;
         }),
+        delete: jest.fn(),
     };
 };
 
@@ -83,6 +84,20 @@ describe('UsersService', () => {
 
             expect(userRepository.findOne).toHaveBeenCalled();
             expect(result.id).toEqual(userId);
+        });
+
+    });
+
+    describe('deleteUser', () => {
+
+        const userId = 143;
+
+        it('should remove given user', async () => {
+            jest.spyOn(userRepository, 'delete');
+
+            await service.deleteUser(userId);
+
+            expect(userRepository.delete).toHaveBeenCalledWith(userId);
         });
 
     });

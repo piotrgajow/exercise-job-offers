@@ -69,6 +69,27 @@ describe('UsersController (e2e)', () => {
             });
     });
 
+    it('/users (DELETE)', () => {
+        expect(userId).toBeDefined();
+        return request(app.getHttpServer())
+            .delete(`/users/${userId}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.text).toEqual('Deleted');
+                userId = undefined;
+            })
+            .then(() => {
+                return request(app.getHttpServer())
+                    .get('/users')
+                    .expect(200)
+                    .expect((resInner) => {
+                        const result = resInner.body;
+                        expect(result).toBeInstanceOf(Array);
+                        expect(result.length).toEqual(0);
+                    });
+            });
+    });
+
     afterAll(() => {
         app.close();
     });
