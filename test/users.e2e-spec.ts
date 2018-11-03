@@ -29,7 +29,7 @@ describe('UsersController (e2e)', () => {
         await app.init();
     });
 
-    it('/users (POST)', () => {
+    it('create user', () => {
         return request(app.getHttpServer())
             .post('/users')
             .send(testUser)
@@ -44,7 +44,7 @@ describe('UsersController (e2e)', () => {
             });
     });
 
-    it('/users (GET)', () => {
+    it('get all users return created user', () => {
         return request(app.getHttpServer())
             .get('/users')
             .expect(200)
@@ -59,7 +59,7 @@ describe('UsersController (e2e)', () => {
             });
     });
 
-    it('/user/:userId (PUT)', async () => {
+    it('update existing user', async () => {
         expect(userId).toBeDefined();
         return request(app.getHttpServer())
             .put(`/users/${userId}`)
@@ -75,7 +75,7 @@ describe('UsersController (e2e)', () => {
             });
     });
 
-    it('/user/:userId (GET)', () => {
+    it('get user by id', () => {
         expect(userId).toBeDefined();
         return request(app.getHttpServer())
             .get(`/users/${userId}`)
@@ -89,7 +89,7 @@ describe('UsersController (e2e)', () => {
             });
     });
 
-    it('/users (DELETE)', () => {
+    it('delete existing user', () => {
         expect(userId).toBeDefined();
         return request(app.getHttpServer())
             .delete(`/users/${userId}`)
@@ -107,6 +107,27 @@ describe('UsersController (e2e)', () => {
                         expect(result).toBeInstanceOf(Array);
                         expect(result.length).toEqual(0);
                     });
+            });
+    });
+
+    it('get user by id throws error if user does not exist', () => {
+        return request(app.getHttpServer())
+            .get('/users/404')
+            .expect(404)
+            .expect((res) => {
+                const result = res.body;
+                expect(result.message).toEqual('User with id 404 does not exist');
+            });
+    });
+
+    it('update user throws error if user does not exist', () => {
+        return request(app.getHttpServer())
+            .put('/users/404')
+            .send(newUserData)
+            .expect(404)
+            .expect((res) => {
+                const result = res.body;
+                expect(result.message).toEqual('User with id 404 does not exist');
             });
     });
 

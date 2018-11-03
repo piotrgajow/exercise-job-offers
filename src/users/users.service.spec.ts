@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { CreateUserCommand } from './dto/create-user-command.dto';
 import { UpdateUserCommand } from './dto/update-user-command.dto';
 import { mockRepository } from '../shared/test-utils';
+import { UserNotFound } from './exceptions/user-not-found';
 
 describe('UsersService', () => {
 
@@ -78,6 +79,14 @@ describe('UsersService', () => {
 
             expect(userRepository.findOne).toHaveBeenCalled();
             expect(result.id).toEqual(userId);
+        });
+
+        it('should throw error if user not found', async () => {
+            mockedUserRepository.initialize(16);
+            const userId = 40;
+            jest.spyOn(userRepository, 'findOne');
+
+            await expect(service.getUserById(userId)).rejects.toThrow(new UserNotFound(userId));
         });
 
     });
