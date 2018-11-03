@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { CreateUserCommand } from './dto/create-user-command.dto';
 import { User } from './entities/user.entity';
 import { UpdateUserCommand } from './dto/update-user-command.dto';
+import { UserNotFound } from './exceptions/user-not-found';
 
 @Injectable()
 export class UsersService {
@@ -33,7 +34,11 @@ export class UsersService {
     }
 
     async getUserById(userId: number): Promise<User> {
-        return await this.userRepository.findOne(userId);
+        const user = await this.userRepository.findOne(userId);
+        if (!user) {
+            throw new UserNotFound(userId);
+        }
+        return user;
     }
 
     async deleteUser(userId: number): Promise<void> {
@@ -42,7 +47,7 @@ export class UsersService {
 
     async updateUser(userId: number, command: UpdateUserCommand): Promise<User> {
         await this.userRepository.update(userId, command);
-        return await this.userRepository.findOne(userId);
+        return await this.getUserById(userId);
     }
 
 }
