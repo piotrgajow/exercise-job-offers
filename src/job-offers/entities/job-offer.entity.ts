@@ -11,13 +11,13 @@ export class JobOffer {
     @Column()
     title: string;
 
-    @Column()
+    @Column('varchar')
     category: JobCategory;
 
-    @Column()
+    @Column('date')
     dateFrom: string;
 
-    @Column()
+    @Column('date')
     dateTo: string;
 
     @Column()
