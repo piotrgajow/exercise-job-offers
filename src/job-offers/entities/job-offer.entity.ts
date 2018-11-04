@@ -11,7 +11,7 @@ export class JobOffer {
     @Column()
     title: string;
 
-    @Column()
+    @Column('varchar')
     category: JobCategory;
 
     @Column()
