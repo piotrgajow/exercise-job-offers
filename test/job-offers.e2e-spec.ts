@@ -48,7 +48,6 @@ describe('JobOffersController (e2e)', () => {
             });
     });
 
-
     describe('searching job offers', () => {
 
         beforeAll(async () => {
