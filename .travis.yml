@@ -20,4 +20,4 @@ jobs:
         - stage: Unit tests
           script: npm run test
         - stage: End to end tests
-          script: npm run test:e2e
+          script: npm run test:e2e --detectOpenHandles
