@@ -6,6 +6,7 @@ import { JobOffersService } from './job-offers.service';
 import { CreateJobOfferCommand } from './dto/create-job-offer-command.dto';
 import { JobOffer } from './entities/job-offer.entity';
 import { mockRepository } from '../shared/test-utils';
+import { FindJobOffersQuery } from './dto/find-job-offers-query.dto';
 
 describe('JobOffers Controller', () => {
     let module: TestingModule;
@@ -41,6 +42,20 @@ describe('JobOffers Controller', () => {
 
             expect(jobOfferService.createJobOffer).toHaveBeenCalledWith(createJobOfferCommand);
             expect(result).toEqual(createdJobOffer);
+        });
+
+    });
+
+    describe('findJobOffers', () => {
+
+        it('should call service and return found job offers', async () => {
+            const findJobOffersQuery = {} as FindJobOffersQuery;
+            jest.spyOn(jobOfferService, 'findJobOffers').mockImplementation(() => []);
+
+            const result = await controller.findJobOffers(findJobOffersQuery);
+
+            expect(jobOfferService.findJobOffers).toHaveBeenCalledWith(findJobOffersQuery);
+            expect(result).toEqual([]);
         });
 
     });

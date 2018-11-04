@@ -8,6 +8,8 @@ import { CreateJobOfferCommand } from './dto/create-job-offer-command.dto';
 import { JobCategory } from './entities/job-category';
 import { JobOffer } from './entities/job-offer.entity';
 import { mockRepository } from '../shared/test-utils';
+import { FindJobOffersQuery } from './dto/find-job-offers-query.dto';
+import { In, MoreThan } from 'typeorm';
 
 describe('JobOffersService', () => {
     let service: JobOffersService;
@@ -42,9 +44,69 @@ describe('JobOffersService', () => {
 
             expect(jobOfferRepositoryMock.save).toHaveBeenCalled();
             expect(result.id).toBeDefined();
-            //expect(result.login).toEqual(command.login);
-            //expect(result.password).toEqual(command.password);
-            //expect(result.creationDate).toBeDefined();
+        });
+
+    });
+
+    describe('findJobOffers', () => {
+
+        it('should return all valid job offers', async () => {
+            const query = {
+                category: undefined,
+                companyName: undefined,
+            } as FindJobOffersQuery;
+            const findParams = {
+                dateTo: MoreThan(LocalDate.now().toString()),
+            };
+
+            await service.findJobOffers(query);
+
+            expect(jobOfferRepositoryMock.find).toHaveBeenCalledWith(findParams);
+        });
+
+        it('should return valid job offers by company name', async () => {
+            const query = {
+                category: undefined,
+                companyName: 'test',
+            } as FindJobOffersQuery;
+            const findParams = {
+                dateTo: MoreThan(LocalDate.now().toString()),
+                companyName: query.companyName,
+            };
+
+            await service.findJobOffers(query);
+
+            expect(jobOfferRepositoryMock.find).toHaveBeenCalledWith(findParams);
+        });
+
+        it('should return valid job offers by category', async () => {
+            const query = {
+                category: JobCategory.IT,
+                companyName: undefined,
+            } as FindJobOffersQuery;
+            const findParams = {
+                dateTo: MoreThan(LocalDate.now().toString()),
+                category: query.category,
+            };
+
+            await service.findJobOffers(query);
+
+            expect(jobOfferRepositoryMock.find).toHaveBeenCalledWith(findParams);
+        });
+
+        it('should return valid job offers by category multiple categories', async () => {
+            const query = {
+                category: [JobCategory.IT, JobCategory.COURIER],
+                companyName: undefined,
+            } as FindJobOffersQuery;
+            const findParams = {
+                dateTo: MoreThan(LocalDate.now().toString()),
+                category: In(query.category as Array<JobCategory>),
+            };
+
+            await service.findJobOffers(query);
+
+            expect(jobOfferRepositoryMock.find).toHaveBeenCalledWith(findParams);
         });
 
     });

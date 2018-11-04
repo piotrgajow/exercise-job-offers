@@ -8,7 +8,10 @@ const connectionConfig = {
     dateStrings: true,
 };
 
-export async function executeSql(sql: string): Promise<void> {
-    const connection = await mysql.createConnection(connectionConfig);
-    connection.query(sql);
+export function executeSql(sql: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const queryCallback = (err, res) => err ? reject(err) : resolve(res);
+        const connection = mysql.createConnection(connectionConfig);
+        connection.query(sql, queryCallback);
+    });
 }
