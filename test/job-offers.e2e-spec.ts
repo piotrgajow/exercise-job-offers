@@ -7,6 +7,7 @@ import { LocalDate } from 'js-joda';
 import { AppModule } from '../src/app.module';
 import { JobCategory } from '../src/job-offers/entities/job-category';
 import { CreateJobOfferCommand } from '../src/job-offers/dto/create-job-offer-command.dto';
+import { executeSql } from './e2e-test-utils';
 
 describe('JobOffersController (e2e)', () => {
     let app: INestApplication;
@@ -28,6 +29,7 @@ describe('JobOffersController (e2e)', () => {
 
         app = moduleFixture.createNestApplication();
         await app.init();
+        await executeSql('TRUNCATE TABLE job_offer');
     });
 
     it('create job offer', () => {

@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '../src/app.module';
+import { executeSql } from './e2e-test-utils';
 
 describe('UsersController (e2e)', () => {
     let app: INestApplication;
@@ -27,6 +28,7 @@ describe('UsersController (e2e)', () => {
 
         app = moduleFixture.createNestApplication();
         await app.init();
+        await executeSql('TRUNCATE TABLE user;');
     });
 
     it('create user', () => {
