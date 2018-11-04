@@ -133,8 +133,8 @@ describe('UsersController (e2e)', () => {
             });
     });
 
-    afterAll(() => {
-        app.close();
+    afterAll(async () => {
+        await app.close();
     });
 
 });
