@@ -34,6 +34,26 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+###### API
+
+`POST` `/users` - Create new user; E.g. body - `{ "login": "test@mail.com", "password": "12345" }`
+
+`GET` `/users` - Return list of existing users
+
+`GET` `/users/:userId` - Return user given by user id
+
+`PUT` `/users/:userId` - Updates user (login & password) given by user id. E.g. body - `{ "login": "abc", "password": "xyz" }`
+
+`DELETE` `/users/:userId` - Delete user given by user id
+
+`POST` `/job-offers` - Create new job offer; E.g. body - `{ "title": "Bartender", "category": "Food & Drinks", "dateFrom": "2018-11-02", "dateTo": "2018-11-16", "companyName": "Students bar" }`
+
+`GET` `/job-offers` - Returns list of found active (offers dateTo is in the future) job offers
+  - Supports filtering by query parameters
+    - `companyName` find by company name - e.g. `/job-offers?companyName=Students%20bar` will return active offers created by company `Students bar`
+    - `category` find by category (or multiple categories) - e.g. `job-offers?category=Food%20%26%20Drinks&category=IT` will return active offers having either category `Food & Drinks` or `IT`
+        
+
 ## Tech stack
 
 ### MySQL database
