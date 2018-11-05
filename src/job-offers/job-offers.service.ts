@@ -7,6 +7,7 @@ import { CreateJobOfferCommand } from './dto/create-job-offer-command.dto';
 import { JobOffer } from './entities/job-offer.entity';
 import { FindJobOffersQuery } from './dto/find-job-offers-query.dto';
 import { LocalDate } from 'js-joda';
+import { ActiveOfferSpecification } from './active-offer.specification';
 
 @Injectable()
 export class JobOffersService {
@@ -24,9 +25,9 @@ export class JobOffersService {
     }
 
     async findJobOffers(query: FindJobOffersQuery): Promise<Array<JobOffer>> {
-        const criteria = {
-            dateTo: MoreThan(LocalDate.now().toString()),
-        } as FindConditions<JobOffer>;
+        const criteria = {} as FindConditions<JobOffer>;
+
+        new ActiveOfferSpecification().addToCriteria(criteria);
 
         if (query.companyName) {
             criteria.companyName = query.companyName;
